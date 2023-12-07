@@ -1,0 +1,23 @@
+name: SONARQUBE
+on:
+  push:
+    branches:
+      - main # or the name of your main branch
+
+jobs:
+  run-sonar-qube:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: run-sonarqube
+        run: |
+          docker run \
+            --rm \
+            -e SONAR_HOST_URL="http://65.2.161.83:9000" \
+            -e SONAR_SCANNER_OPTS="-Dsonar.projectKey=${{ secrets.SNRCB_PROJECT_KEY }}" \
+            -e SONAR_LOGIN="${{ secrets.SNRCB_PROJECT_LOGIN }}" \
+            -v "$(pwd):/usr/src" \
+            sonarsource/sonar-scanner-cli
